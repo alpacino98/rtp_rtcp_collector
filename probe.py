@@ -40,9 +40,11 @@ async def main():
     from urllib.parse import urlparse
 
     parser = argparse.ArgumentParser()
-    parser.add_argument('-p', '--port', type=str, default="554", help='RTSP port')
-    parser.add_argument('-un', '--username', type=str, default="admin", help='RTSP username')
-    parser.add_argument('-pw', '--password', type=str, default="password", help='RTSP password')
+    parser.add_argument('-l', '--logging', type=int, default=20, help='RTSP url')
+    parser.add_argument('-a', '--address', default='127.0.0.1', help='destination UDP address')
+    parser.add_argument('-A', '--auth', type=str, help='Auth to force ')
+    parser.add_argument('-p', '--props', default=None, help='Stream props (guessed if not provided)')
+    parser.add_argument('-t', '--timeout', type=int, default=10, help='UDP timeout')
     parser.add_argument('-u', '--url',help='RTSP url for fetching')
     args = parser.parse_args()
 
@@ -53,10 +55,10 @@ async def main():
     probe = Probe()
 
     async with RTSPConnection(
-            args.address,
-            args.port,
-            args.username,
-            args.password,
+            p_url.hostname,
+            p_url.port or 554,
+            p_url.username,
+            p_url.password,
             logger=logger
     ) as conn:
 
